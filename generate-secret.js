@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // Script pour générer une clé secrète aléatoire pour NEXTAUTH_SECRET
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 const secret = crypto.randomBytes(32).toString('hex');
 
