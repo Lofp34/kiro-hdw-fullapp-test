@@ -7,10 +7,5 @@
     "src/app/api/**/*.ts": {
       "maxDuration": 30
     }
-  },
-  "env": {
-    "HDW_ACCESS_TOKEN": "@hdw_access_token",
-    "HDW_ACCOUNT_ID": "@hdw_account_id",
-    "NEXTAUTH_SECRET": "@nextauth_secret"
   }
 }
