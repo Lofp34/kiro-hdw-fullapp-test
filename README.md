@@ -1,278 +1,146 @@
-# HDW MCP Server
-[![smithery badge](https://smithery.ai/badge/@horizondatawave/hdw-mcp-server)](https://smithery.ai/server/@horizondatawave/hdw-mcp-server)
+# LinkedIn Prospect Downloader
 
-A Model Context Protocol (MCP) server that provides comprehensive access to LinkedIn data and functionalities using the HorizonDataWave API, enabling not only data retrieval but also robust management of user accounts.
----
+Une application web moderne pour télécharger facilement les profils LinkedIn de vos prospects en utilisant l'API Horizon Data Wave.
 
-## Features
+## 🚀 Fonctionnalités
 
-- **LinkedIn Users Search:** Filter and search for LinkedIn users by keywords, name, title, company, location, industry, and education.
-- **Profile Lookup:** Retrieve detailed profile information for a LinkedIn user.
-- **Email Lookup:** Find LinkedIn user details by email address.
-- **Posts & Reactions:** Retrieve a user's posts and associated reactions.
-- **Post Reposts & Comments:** Retrieve reposts and comments for a specific LinkedIn post.
-- **Account Management:**
-  - **Chat Functionality:** Retrieve and send chat messages via the LinkedIn management API.
-  - **Connection Management:** Send connection invitations to LinkedIn users.
-  - **Post Commenting:** Create comments on LinkedIn posts or replies.
-  - **User Connections:** Retrieve a list of a user's LinkedIn connections.
-- **Company Search & Details:**  
-  - **Google Company Search:** Find LinkedIn companies using Google search – the first result is typically the best match.  
-  - **Company Lookup:** Retrieve detailed information about a LinkedIn company.  
-  - **Company Employees:** Retrieve employees for a given LinkedIn company.
-  
-- **Google Search**
+- **Recherche par profil** : URL LinkedIn ou nom d'utilisateur
+- **Recherche par email** : Trouvez un profil à partir d'une adresse email
+- **Recherche avancée** : Recherche par mots-clés
+- **Téléchargement JSON** : Exportez toutes les données récupérées
+- **Interface moderne** : Design responsive avec Tailwind CSS
+- **API sécurisée** : Communication directe avec l'API Horizon Data Wave
 
----
+## 🛠️ Installation
 
-## Tools
-
-HDW MCP Server exposes several tools through the MCP protocol. Each tool is defined with its name, description, and input parameters:
-
-1. **Search LinkedIn Users**  
-   **Name:** `search_linkedin_users`  
-   **Description:** Search for LinkedIn users with various filters.  
-   **Parameters:**  
-   - `keywords` (optional): Any keyword for search.  
-   - `first_name`, `last_name`, `title`, `company_keywords`, `school_keywords` (optional).  
-   - `current_company`, `past_company`, `location`, `industry`, `education` (optional).  
-   - `count` (optional, default: 10): Maximum number of results (max 1000).  
-   - `timeout` (optional, default: 300): Timeout in seconds (20–1500).
-
-2. **Get LinkedIn Profile**  
-   **Name:** `get_linkedin_profile`  
-   **Description:** Retrieve detailed profile information about a LinkedIn user.  
-   **Parameters:**  
-   - `user` (required): User alias, URL, or URN.  
-   - `with_experience`, `with_education`, `with_skills` (optional, default: true).
-
-3. **Get LinkedIn Email User**  
-   **Name:** `get_linkedin_email_user`  
-   **Description:** Look up LinkedIn user details by email.  
-   **Parameters:**  
-   - `email` (required): Email address.  
-   - `count` (optional, default: 5).  
-   - `timeout` (optional, default: 300).
-
-4. **Get LinkedIn User Posts**  
-   **Name:** `get_linkedin_user_posts`  
-   **Description:** Retrieve posts for a LinkedIn user by URN.  
-   **Parameters:**  
-   - `urn` (required): User URN (must include prefix, e.g. `fsd_profile:...`).  
-   - `count` (optional, default: 10).  
-   - `timeout` (optional, default: 300).
-
-5. **Get LinkedIn User Reactions**  
-   **Name:** `get_linkedin_user_reactions`  
-   **Description:** Retrieve reactions for a LinkedIn user by URN.  
-   **Parameters:**  
-   - `urn` (required).  
-   - `count` (optional, default: 10).  
-   - `timeout` (optional, default: 300).
-
-6. **Get LinkedIn Chat Messages**  
-   **Name:** `get_linkedin_chat_messages`  
-   **Description:** Retrieve top chat messages from the LinkedIn management API.  
-   **Parameters:**  
-   - `user` (required): User URN (with prefix).  
-   - `count` (optional, default: 20).  
-   - `timeout` (optional, default: 300).
-
-7. **Send LinkedIn Chat Message**  
-   **Name:** `send_linkedin_chat_message`  
-   **Description:** Send a chat message using the LinkedIn management API.  
-   **Parameters:**  
-   - `user` (required): Recipient user URN (with prefix).  
-   - `text` (required): Message text.  
-   - `timeout` (optional, default: 300).
-
-8. **Send LinkedIn Connection Request**  
-   **Name:** `send_linkedin_connection`  
-   **Description:** Send a connection invitation to a LinkedIn user.  
-   **Parameters:**  
-   - `user` (required).  
-   - `timeout` (optional, default: 300).
-
-9. **Send LinkedIn Post Comment**  
-   **Name:** `send_linkedin_post_comment`  
-   **Description:** Create a comment on a LinkedIn post or reply.  
-   **Parameters:**  
-   - `text` (required): Comment text.  
-   - `urn` (required): Activity or comment URN.  
-   - `timeout` (optional, default: 300).
-
-10. **Get LinkedIn User Connections**  
-    **Name:** `get_linkedin_user_connections`  
-    **Description:** Retrieve a list of LinkedIn user connections.  
-    **Parameters:**  
-    - `connected_after` (optional): Timestamp filter.  
-    - `count` (optional, default: 20).  
-    - `timeout` (optional, default: 300).
-
-11. **Get LinkedIn Post Reposts**  
-    **Name:** `get_linkedin_post_reposts`  
-    **Description:** Retrieve reposts for a LinkedIn post.  
-    **Parameters:**  
-    - `urn` (required): Post URN (must start with `activity:`).  
-    - `count` (optional, default: 10).  
-    - `timeout` (optional, default: 300).
-
-12. **Get LinkedIn Post Comments**  
-    **Name:** `get_linkedin_post_comments`  
-    **Description:** Retrieve comments for a LinkedIn post.  
-    **Parameters:**  
-    - `urn` (required).  
-    - `sort` (optional, default: `"relevance"`; allowed values: `"relevance"`, `"recent"`).  
-    - `count` (optional, default: 10).  
-    - `timeout` (optional, default: 300).
-
-13. **Get LinkedIn Google Company**  
-    **Name:** `get_linkedin_google_company`  
-    **Description:** Search for LinkedIn companies via Google – the first result is typically the best match.  
-    **Parameters:**  
-    - `keywords` (required): Array of company keywords.  
-    - `with_urn` (optional, default: false).  
-    - `count_per_keyword` (optional, default: 1; range 1–10).  
-    - `timeout` (optional, default: 300).
-
-14. **Get LinkedIn Company**  
-    **Name:** `get_linkedin_company`  
-    **Description:** Retrieve detailed information about a LinkedIn company.  
-    **Parameters:**  
-    - `company` (required): Company alias, URL, or URN.  
-    - `timeout` (optional, default: 300).
-
-15. **Get LinkedIn Company Employees**  
-    **Name:** `get_linkedin_company_employees`  
-    **Description:** Retrieve employees of a LinkedIn company.  
-    **Parameters:**  
-    - `companies` (required): Array of company URNs.  
-    - `keywords`, `first_name`, `last_name` (optional).  
-    - `count` (optional, default: 10).  
-    - `timeout` (optional, default: 300).
-
----
-
-## Setup Guide
-
-### Installing via Smithery
-
-To install HDW MCP Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@horizondatawave/hdw-mcp-server):
-
+1. **Cloner le projet**
 ```bash
-npx -y @smithery/cli install @horizondatawave/hdw-mcp-server --client claude
+git clone <votre-repo>
+cd linkedin-prospect-downloader
 ```
 
-### 1. Clone the Repository (macOS)
-
-Open your terminal and run the following commands:
-
+2. **Installer les dépendances**
 ```bash
-# Clone the repository
-git clone https://github.com/horizondatawave/hdw-mcp-server.git
-
-# Change directory to the project folder
-cd hdw-mcp-server
-
-# Install dependencies
 npm install
 ```
-### 2. Obtain Your API Credentials
 
-Register at [app.horizondatawave.ai](https://app.horizondatawave.ai) to get your API key and 100 free credits. You will receive your **HDW_ACCESS_TOKEN** and **HDW_ACCOUNT_ID**.
+3. **Configuration des variables d'environnement**
 
----
-
-### 3. Configure the Environment
-
-Create a `.env` file in the root of your project with the following content:
+Créez un fichier `.env.local` (ou modifiez le `.env` existant) :
 
 ```env
-HDW_ACCESS_TOKEN=YOUR_HD_W_ACCESS_TOKEN
-HDW_ACCOUNT_ID=YOUR_HD_W_ACCOUNT_ID
+# Configuration pour l'API Horizon Data Wave LinkedIn
+HDW_ACCESS_TOKEN=votre_token_hdw_ici
+HDW_ACCOUNT_ID=votre_account_id_ici
+
+# Configuration Next.js
+NEXTAUTH_SECRET=votre-secret-key-ici
+NEXTAUTH_URL=http://localhost:3000
 ```
-### 4. Client Configuration
 
-#### 4.1 Claude Desktop
-
-Update your Claude configuration file (`claude_desktop_config.json`) with the following content:
-
-```json
-{
-  "mcpServers": {
-    "hdw": {
-      "command": "npx",
-      "args": ["-y","@horizondatawave/mcp"],
-      "env": {
-        "HDW_ACCESS_TOKEN": "YOUR_HD_W_ACCESS_TOKEN",
-        "HDW_ACCOUNT_ID": "YOUR_HD_W_ACCOUNT_ID"
-      }
-    }
-  }
-}
+4. **Lancer en développement**
+```bash
+npm run dev
 ```
-*Configuration file location:*
 
-- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+L'application sera disponible sur [http://localhost:3000](http://localhost:3000)
 
----
+## 🌐 Déploiement sur Vercel (Recommandé)
 
-#### 4.2 Cursor
+**Pour éviter les problèmes CORS et tester en conditions réelles, déployez directement sur Vercel :**
 
-**Easy way:**  
-Open Cursor Settings and add a new MCP server with the command:
+### Déploiement rapide
+
+1. **Créer un repository GitHub** avec ce code
+2. **Aller sur [vercel.com](https://vercel.com)** et se connecter avec GitHub
+3. **Importer votre repository** - Vercel détectera automatiquement Next.js
+4. **Configurer les variables d'environnement** (voir section ci-dessous)
+5. **Déployer** - Votre app sera disponible sur une URL Vercel
+
+### Variables d'environnement Vercel
+
+Dans **Settings > Environment Variables**, ajouter :
+- `HDW_ACCESS_TOKEN` : Votre token HDW
+- `HDW_ACCOUNT_ID` : Votre account ID HDW  
+- `NEXTAUTH_SECRET` : Clé secrète (générez-en une avec `node generate-secret.js`)
+
+📖 **Guide détaillé** : Voir [DEPLOY.md](./DEPLOY.md)
+
+## 📋 Configuration requise
+
+### Variables d'environnement obligatoires
+
+- **HDW_ACCESS_TOKEN** : Votre token d'accès à l'API Horizon Data Wave
+- **HDW_ACCOUNT_ID** : Votre ID de compte Horizon Data Wave
+
+### Variables d'environnement optionnelles
+
+- **NEXTAUTH_SECRET** : Clé secrète pour la sécurité (générez-en une aléatoire)
+- **NEXTAUTH_URL** : URL de votre application (automatique sur Vercel)
+
+## 🔧 Scripts disponibles
 
 ```bash
-env HDW_ACCESS_TOKEN=your-access-token HDW_ACCOUNT_ID=your-account-id node /path/to/your/build/index.js
+# Développement
+npm run dev
+
+# Build de production
+npm run build
+
+# Démarrer en production
+npm run start
+
+# Linting
+npm run lint
+
+# Scripts MCP (si vous voulez utiliser le serveur MCP directement)
+npm run mcp:build
+npm run mcp:watch
+npm run mcp:inspector
 ```
-**Safe way:**  
-Copy the provided template `run.template.sh` to a new file (e.g. `run.sh`), update it with your credentials, and configure Cursor to run:
 
-```bash
-sh /path/to/your/run.sh
-```
-#### 4.3 Windsurf
+## 📱 Utilisation
 
-Update your Windsurf configuration file (`mcp_config.json`) with the following content:
+1. **Choisissez votre type de recherche** :
+   - Profil : URL LinkedIn ou nom d'utilisateur
+   - Email : Adresse email du prospect
+   - Recherche avancée : Mots-clés
 
-```json
-{
-  "mcpServers": {
-    "hdw": {
-      "command": "node",
-      "args": ["/path/to/your/build/index.js"],
-      "env": {
-        "HDW_ACCESS_TOKEN": "YOUR_HD_W_ACCESS_TOKEN",
-        "HDW_ACCOUNT_ID": "YOUR_HD_W_ACCOUNT_ID"
-      }
-    }
-  }
-}
-```
-**Note:** After configuration, you can disable official web tools to conserve your API credits.
+2. **Saisissez votre recherche** et cliquez sur "Rechercher"
 
----
+3. **Consultez les résultats** affichés avec :
+   - Informations du profil
+   - Publications récentes
+   - Données de connexion
 
-### MCP Client Example Configuration
+4. **Téléchargez les données** au format JSON pour vos analyses
 
-Below is an example configuration for an MCP client (e.g., a custom integration):
+## 🔒 Sécurité
 
-```json
-{
-  "mcpServers": {
-    "hdw": {
-      "command": "npx",
-      "args": ["-y","@horizondatawave/mcp"],
-      "env": {
-        "HDW_ACCESS_TOKEN": "YOUR_HD_W_ACCESS_TOKEN",
-        "HDW_ACCOUNT_ID": "YOUR_HD_W_ACCOUNT_ID"
-      }
-    }
-  }
-}
-```
-Replace the paths and credentials with your own values.
-## License
+- Les tokens API ne sont jamais exposés côté client
+- Toutes les requêtes passent par l'API route sécurisée
+- Variables d'environnement chiffrées sur Vercel
 
-This project is licensed under the [MIT License](LICENSE.md).
+## 🐛 Dépannage
+
+### Erreur "HDW_ACCESS_TOKEN non configuré"
+- Vérifiez que votre token est bien configuré dans les variables d'environnement
+- Sur Vercel, vérifiez dans Settings > Environment Variables
+
+### Erreur "API LinkedIn error: 401"
+- Votre token HDW_ACCESS_TOKEN est invalide ou expiré
+- Contactez Horizon Data Wave pour renouveler votre accès
+
+### Erreur "API LinkedIn error: 429"
+- Vous avez atteint la limite de requêtes
+- Attendez quelques minutes avant de réessayer
+
+## 📞 Support
+
+Pour toute question concernant :
+- **L'API Horizon Data Wave** : Contactez le support HDW
+- **Cette application** : Créez une issue sur le repository
+
+## 📄 Licence
+
+MIT License - Voir le fichier LICENSE pour plus de détails.

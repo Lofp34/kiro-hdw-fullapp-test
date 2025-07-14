@@ -1,47 +1,49 @@
 {
-  "name": "@horizondatawave/mcp",
-  "version": "0.1.5",
-  "description": "A Model Context Protocol (MCP) server that provides access to Horizon Data Wave's LinkedIn API",
-  "private": false,
+  "name": "linkedin-prospect-downloader",
+  "version": "1.0.0",
+  "description": "Application web pour télécharger les profils LinkedIn de prospects",
+  "private": true,
   "type": "module",
-  "bin": {
-    "@horizondatawave/mcp": "build/index.js",
-    "hdw-mcp": "build/index.js",
-    "horizondatawave-mcp": "build/index.js"
-  },
-  "files": [
-    "build"
-  ],
   "scripts": {
-    "build": "tsc && chmod +x build/index.js",
-    "prepare": "npm run build",
-    "watch": "tsc --watch",
-    "inspector": "npx @modelcontextprotocol/inspector build/index.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "mcp:build": "tsc && chmod +x build/index.js",
+    "mcp:watch": "tsc --watch",
+    "mcp:inspector": "npx @modelcontextprotocol/inspector build/index.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.6.0",
     "dotenv": "^16.4.7",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "lucide-react": "^0.263.1"
   },
   "devDependencies": {
     "@types/node": "^20.17.23",
-    "typescript": "^5.8.2"
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.8.2",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "tailwindcss": "^3.3.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31"
   },
   "keywords": [
-    "mcp",
-    "claude",
     "linkedin",
-    "hdw",
-    "horizondatawave"
+    "prospect",
+    "downloader",
+    "mcp",
+    "nextjs"
   ],
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/horizondatawave/hdw-mcp-server.git"
-  },
-  "homepage": "https://horizondatawave.ai",
-  "author": "Horizon Data Wave"
+  }
 }
